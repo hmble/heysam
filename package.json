@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "start": "wrangler dev",
-    "deploy": "wrangler publish"
+    "deploy": "wrangler publish",
+    "addkey": "wrangler kv:key put --binding SHORT_URLS --preview false"
   }
 }

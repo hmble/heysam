@@ -8,7 +8,11 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+const PERSONAL_SITE = 'https://samyakb.com'
+
 export interface Env {
+	SHORT_URLS: KVNamespace;
+
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//
@@ -25,6 +29,21 @@ export default {
 		env: Env,
 		ctx: ExecutionContext
 	): Promise<Response> {
-		return new Response("Hello World!");
+
+		const url = new URL(request.url);
+
+		const { pathname } = url;
+
+
+		if (pathname === "/") {
+			return Response.redirect(PERSONAL_SITE, 301);
+		}
+		const redirectURL = await env.SHORT_URLS.get(pathname);
+
+		if (!redirectURL) {
+			return Response.redirect(PERSONAL_SITE, 301);
+		}
+
+		return Response.redirect(redirectURL, 301);
 	},
 };
